@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"unsafe"
 
+	"github.com/Dreamacro/clash/log"
 	"golang.org/x/sys/windows"
 )
 
@@ -49,7 +50,7 @@ func logMessage(level loggerLevel, _ uint64, msg *uint16) int {
 	default:
 		lv = log.INFO
 	}
-	PrintLog(lv, "[Wintun] %s", windows.UTF16PtrToString(msg))
+	log.PrintLog(lv, "[Wintun] %s", windows.UTF16PtrToString(msg))
 	return 0
 }
 

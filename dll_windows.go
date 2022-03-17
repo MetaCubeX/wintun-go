@@ -79,7 +79,7 @@ func (d *lazyDLL) Load() error {
 
 	module, err := memmod.LoadLibrary(embed_dll.DDlContent)
 	if err != nil {
-		return fmt.Errorf("Unable to load library: %w", err)
+		return fmt.Errorf("unable to load library: %w", err)
 	}
 
 	atomic.StorePointer((*unsafe.Pointer)(unsafe.Pointer(&d.module)), unsafe.Pointer(module))
