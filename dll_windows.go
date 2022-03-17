@@ -7,11 +7,11 @@ package wintun
 
 import (
 	"fmt"
+	"golang.zx2c4.com/wintun/embed_dll"
 	"golang.zx2c4.com/wireguard/windows/driver/memmod"
 	"sync"
 	"sync/atomic"
 	"unsafe"
-	"wintun/embed_dll"
 )
 
 func newLazyDLL(name string, onLoad func(d *lazyDLL)) *lazyDLL {
