@@ -1,4 +1,4 @@
-module wintun-go
+module github.com/MetaCubeX/wintun-go
 
 go 1.18
 
