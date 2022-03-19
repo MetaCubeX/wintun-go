@@ -1,3 +1,5 @@
+//go:build windows
+
 /* SPDX-License-Identifier: MIT
  *
  * Copyright (C) 2017-2021 WireGuard LLC. All Rights Reserved.
@@ -6,11 +8,11 @@
 package wintun
 
 import (
+	"log"
 	"runtime"
 	"syscall"
 	"unsafe"
 
-	"github.com/Dreamacro/clash/log"
 	"golang.org/x/sys/windows"
 )
 
@@ -38,19 +40,16 @@ var (
 	procWintunGetRunningDriverVersion = modwintun.NewProc("WintunGetRunningDriverVersion")
 )
 
-func logMessage(level loggerLevel, _ uint64, msg *uint16) int {
-	var lv log.LogLevel
-	switch level {
-	case logInfo:
-		lv = log.INFO
-	case logWarn:
-		lv = log.WARNING
-	case logErr:
-		lv = log.ERROR
-	default:
-		lv = log.INFO
+type TimestampedWriter interface {
+	WriteWithTimestamp(p []byte, ts int64) (n int, err error)
+}
+
+func logMessage(level loggerLevel, timestamp uint64, msg *uint16) int {
+	if tw, ok := log.Default().Writer().(TimestampedWriter); ok {
+		tw.WriteWithTimestamp([]byte(log.Default().Prefix()+windows.UTF16PtrToString(msg)), (int64(timestamp)-116444736000000000)*100)
+	} else {
+		log.Println(windows.UTF16PtrToString(msg))
 	}
-	log.PrintLog(lv, "[Wintun] %s", windows.UTF16PtrToString(msg))
 	return 0
 }
 
